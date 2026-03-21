@@ -28,4 +28,14 @@ class CategoryModel {
       'created_at': createdAt,
     };
   }
+
+  // Override operator == đê DropdownButton Flutter nhận diện đúng Category
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is CategoryModel && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }
