@@ -17,18 +17,20 @@ class ApiService {
 
   ApiService() {
     // Để tiện debug lỗi API sau này ném thẳng vào log
-    _dio.interceptors.add(InterceptorsWrapper(
-      onError: (DioException e, handler) {
-        debugPrint('API Error: ${e.message}');
-        // Hiển thị thông báo Snackbar
-        Get.snackbar(
-          'Lỗi kết nối',
-          e.response?.data['message'] ?? 'Không thể kết nối đến máy chủ',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-        return handler.next(e);
-      },
-    ));
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onError: (DioException e, handler) {
+          debugPrint('API Error: ${e.message}');
+          // Hiển thị thông báo Snackbar
+          Get.snackbar(
+            'Lỗi kết nối',
+            e.response?.data['message'] ?? 'Không thể kết nối đến máy chủ',
+            snackPosition: SnackPosition.BOTTOM,
+          );
+          return handler.next(e);
+        },
+      ),
+    );
   }
 
   // ============== CATEGORIES ==============
@@ -51,7 +53,10 @@ class ApiService {
 
   // ============== TRANSACTIONS ==============
 
-  Future<List<TransactionModel>> getTransactions({int? month, int? year}) async {
+  Future<List<TransactionModel>> getTransactions({
+    int? month,
+    int? year,
+  }) async {
     try {
       final queryParams = <String, dynamic>{};
       if (month != null) queryParams['month'] = month;
@@ -79,13 +84,16 @@ class ApiService {
     String? note,
   }) async {
     try {
-      final response = await _dio.post(ApiEndpoints.transactions, data: {
-        'title': title,
-        'amount': amount,
-        'category_id': categoryId,
-        'transaction_date': transactionDate,
-        'note': note,
-      });
+      final response = await _dio.post(
+        ApiEndpoints.transactions,
+        data: {
+          'title': title,
+          'amount': amount,
+          'category_id': categoryId,
+          'transaction_date': transactionDate,
+          'note': note,
+        },
+      );
       return response.data['success'] == true;
     } catch (e) {
       return false;
@@ -98,6 +106,37 @@ class ApiService {
       return response.data['success'] == true;
     } catch (e) {
       return false;
+    }
+  }
+
+  // ============== LOGIN ==============
+
+  Future<Map<String, dynamic>> login(String username, String password) async {
+    try {
+      final response = await _dio.post(
+        '/auth/login', // Đường dẫn này sẽ nối tiếp vào baseUrl (ví dụ: /api/auth/login)
+        data: {'username': username, 'password': password},
+      );
+
+      // Dio tự động parse JSON nên bạn có thể dùng response.data luôn
+      return {
+        'success': true,
+        'message': response.data['message'],
+        'user': response.data['user'],
+      };
+    } on DioException catch (e) {
+      // Xử lý lỗi từ Server (ví dụ: 401 Sai mật khẩu)
+      if (e.response != null) {
+        return {
+          'success': false,
+          'message': e.response?.data['message'] ?? 'Đăng nhập thất bại',
+        };
+      }
+      // Lỗi kết nối (Server chưa bật, sai IP...)
+      return {
+        'success': false,
+        'message': 'Không thể kết nối đến máy chủ. Kiểm tra Node.js!',
+      };
     }
   }
 }

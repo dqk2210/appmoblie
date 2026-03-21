@@ -29,3 +29,7 @@ INSERT INTO categories (name, type) VALUES
 ('Ăn uống', 'EXPENSE'),
 ('Mua sắm', 'EXPENSE'),
 ('Di chuyển', 'EXPENSE');
+
+USE expense_tracker;
+
+expense_trackerexpense_tracker

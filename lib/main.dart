@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'core/constants/colors.dart';
-import 'screens/dashboard/home_screen.dart';
+// import 'screens/dashboard/home_screen.dart';
+import 'screens/auth/login_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +28,7 @@ class FinanceTrackerApp extends StatelessWidget {
           secondary: AppColors.secondary,
         ),
       ),
-      home: const HomeScreen(), // Tro ve trang Dashboard
+      home: const LoginScreen(), // Tro ve trang Login
     );
   }
 }
