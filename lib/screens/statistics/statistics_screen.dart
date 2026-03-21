@@ -32,7 +32,7 @@ class StatisticsScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 30),
             const Text(
-              'Cơ cấu chi tiêu',
+              'Cơ cấu Thu - Chi',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
@@ -47,7 +47,7 @@ class StatisticsScreen extends StatelessWidget {
                       color: controller.getColorForCategory(entry.key),
                       value: entry.value,
                       title:
-                          '\${((entry.value / controller.pieChartData.values.reduce((a, b) => a + b)) * 100).toStringAsFixed(1)}%',
+                          '${((entry.value / controller.pieChartData.values.reduce((a, b) => a + b)) * 100).toStringAsFixed(1)}%',
                       radius: 60,
                       titleStyle: const TextStyle(
                         fontSize: 14,
