@@ -11,7 +11,7 @@ void main() {
 }
 
 class FinanceTrackerApp extends StatelessWidget {
-  const FinanceTrackerApp({Key? key}) : super(key: key);
+  const FinanceTrackerApp({super.key});
 
   @override
   Widget build(BuildContext context) {

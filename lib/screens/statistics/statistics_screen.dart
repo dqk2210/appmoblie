@@ -7,7 +7,7 @@ import '../../core/utils/currency_format.dart';
 import 'statistics_controller.dart';
 
 class StatisticsScreen extends StatelessWidget {
-  const StatisticsScreen({Key? key}) : super(key: key);
+  const StatisticsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +46,14 @@ class StatisticsScreen extends StatelessWidget {
                     return PieChartSectionData(
                       color: controller.getColorForCategory(entry.key),
                       value: entry.value,
-                      title: '\${((entry.value / controller.pieChartData.values.reduce((a, b) => a + b)) * 100).toStringAsFixed(1)}%',
+                      title:
+                          '\${((entry.value / controller.pieChartData.values.reduce((a, b) => a + b)) * 100).toStringAsFixed(1)}%',
                       radius: 60,
-                      titleStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                      titleStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     );
                   }).toList(),
                 ),
@@ -60,13 +65,21 @@ class StatisticsScreen extends StatelessWidget {
                 children: controller.pieChartData.entries.map((entry) {
                   return ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: controller.getColorForCategory(entry.key),
+                      backgroundColor: controller.getColorForCategory(
+                        entry.key,
+                      ),
                       radius: 12,
                     ),
-                    title: Text(entry.key, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    title: Text(
+                      entry.key,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     trailing: Text(
                       CurrencyFormat.formatVND(entry.value),
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   );
                 }).toList(),

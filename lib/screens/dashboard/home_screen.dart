@@ -8,7 +8,7 @@ import '../statistics/statistics_screen.dart';
 import 'home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class HomeScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -157,16 +157,16 @@ class HomeScreen extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: isIncome ? AppColors.income.withOpacity(0.2) : AppColors.expense.withOpacity(0.2),
+              backgroundColor: isIncome ? AppColors.income.withValues(alpha: 0.2) : AppColors.expense.withValues(alpha: 0.2),
               child: Icon(
                 isIncome ? Icons.account_balance_wallet : Icons.shopping_cart,
                 color: isIncome ? AppColors.income : AppColors.expense,
               ),
             ),
             title: Text(t.title ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text('\${t.categoryName} • \${CurrencyFormat.formatDate(t.transactionDate ?? '')}'),
+            subtitle: Text('${t.categoryName} • ${CurrencyFormat.formatDate(t.transactionDate ?? '')}'),
             trailing: Text(
-              '\${isIncome ? '+' : '-'}\${CurrencyFormat.formatVND(t.amount ?? 0)}',
+              (isIncome ? '+' : '-') + CurrencyFormat.formatVND(t.amount ?? 0),
               style: TextStyle(
                 color: isIncome ? AppColors.income : AppColors.expense,
                 fontWeight: FontWeight.bold,

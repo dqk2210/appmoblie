@@ -7,7 +7,7 @@ import '../../data/models/category_model.dart';
 import 'add_transaction_controller.dart';
 
 class AddTransactionScreen extends StatelessWidget {
-  const AddTransactionScreen({Key? key}) : super(key: key);
+  const AddTransactionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

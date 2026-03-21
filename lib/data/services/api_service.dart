@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
 import '../../core/constants/api_endpoints.dart';
 import '../models/category_model.dart';
 import '../models/transaction_model.dart';
@@ -18,7 +19,7 @@ class ApiService {
     // Để tiện debug lỗi API sau này ném thẳng vào log
     _dio.interceptors.add(InterceptorsWrapper(
       onError: (DioException e, handler) {
-        print('API Error: \${e.message}');
+        debugPrint('API Error: ${e.message}');
         // Hiển thị thông báo Snackbar
         Get.snackbar(
           'Lỗi kết nối',
