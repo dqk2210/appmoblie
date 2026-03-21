@@ -45,7 +45,7 @@ class AddTransactionScreen extends StatelessWidget {
                     items: controller.categories.map((cat) {
                       return DropdownMenuItem(
                         value: cat,
-                        child: Text('\${cat.name} (\${cat.type == "INCOME" ? "Thu" : "Chi"})'),
+                        child: Text('${cat.name} (${cat.type == "INCOME" ? "Thu" : "Chi"})'),
                       );
                     }).toList(),
                     onChanged: (cat) {
@@ -90,7 +90,7 @@ class AddTransactionScreen extends StatelessWidget {
                     context: context,
                     initialDate: controller.transactionDate.value,
                     firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
+                    lastDate: DateTime.now(),
                   );
                   if (pickedDate != null) {
                     controller.transactionDate.value = pickedDate;

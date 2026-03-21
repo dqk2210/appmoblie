@@ -22,14 +22,17 @@ class StatisticsController extends GetxController {
     List<TransactionModel> rawTransactions = Get.find<HomeController>().transactions;
     Map<String, double> groupedData = {};
 
-    // Chỉ tính các khoản CHI TIÊU (EXPENSE) để vẽ biểu đồ tròn
+    // Tính tất cả các khoản Thu và Chi để vẽ dạng tóm tắt dòng tiền
     for (var t in rawTransactions) {
-      if (t.categoryType == 'EXPENSE') {
+      double amount = t.amount ?? 0;
+      if (amount > 0) {
         String categoryName = t.categoryName ?? 'Khác';
-        if (groupedData.containsKey(categoryName)) {
-          groupedData[categoryName] = groupedData[categoryName]! + (t.amount ?? 0);
+        String displayName = '$categoryName (${t.categoryType == 'INCOME' ? 'Thu' : 'Chi'})';
+        
+        if (groupedData.containsKey(displayName)) {
+          groupedData[displayName] = groupedData[displayName]! + amount;
         } else {
-          groupedData[categoryName] = t.amount ?? 0;
+           groupedData[displayName] = amount;
         }
       }
     }
@@ -40,17 +43,11 @@ class StatisticsController extends GetxController {
 
   // Tiện ích lấy màu sắc ngẫu nhiên hoặc cố định cho từng section
   Color getColorForCategory(String title) {
-    switch (title) {
-      case 'Ăn uống':
-        return Colors.orange;
-      case 'Mua sắm':
-        return Colors.blue;
-      case 'Di chuyển':
-        return Colors.purple;
-      case 'Hóa đơn':
-        return Colors.redAccent;
-      default:
-        return Colors.grey;
-    }
+    if (title.contains('(Thu)')) return Colors.green; // Tô màu xanh cho mảng Thu
+    if (title.contains('Ăn uống')) return Colors.orange;
+    if (title.contains('Mua sắm')) return Colors.blue;
+    if (title.contains('Di chuyển')) return Colors.purple;
+    if (title.contains('Hóa đơn')) return Colors.redAccent;
+    return Colors.grey;
   }
 }
