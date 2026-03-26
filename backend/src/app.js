@@ -4,6 +4,8 @@ require('dotenv').config();
 
 const categoryRoutes = require('./routes/category.routes');
 const transactionRoutes = require('./routes/transaction.routes');
+// Khai báo route cho phần xác thực (Login)
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.use(express.json()); // Giúp server đọc được JSON từ client gửi 
 // Gắn Routers
 app.use('/api/categories', categoryRoutes);
 app.use('/api/transactions', transactionRoutes);
+// Gắn đường dẫn cho Login
+app.use('/api/auth', authRoutes);
 
 // Route Test
 app.get('/', (req, res) => {

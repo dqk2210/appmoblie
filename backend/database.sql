@@ -22,6 +22,15 @@ CREATE TABLE IF NOT EXISTS transactions (
   FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT
 );
 
+-- 3. Bảng Users (Tài khoản)
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Thêm một số dữ liệu mẫu (Seeder)
 INSERT INTO categories (name, type) VALUES 
 ('Tiền lương', 'INCOME'),
