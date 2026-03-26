@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'login_controller.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -50,6 +51,13 @@ class LoginScreen extends StatelessWidget {
                           controller.login(userCtrl.text, passCtrl.text),
                       child: const Text("LOGIN"),
                     ),
+            ),
+            const SizedBox(
+              height: 15,
+            ), // Khoảng cách giữa nút Login và TextButton
+            TextButton(
+              onPressed: () => Get.to(() => const RegisterScreen()),
+              child: const Text("Chưa có tài khoản? Đăng ký ngay"),
             ),
           ],
         ),

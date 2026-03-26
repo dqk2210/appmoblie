@@ -114,11 +114,10 @@ class ApiService {
   Future<Map<String, dynamic>> login(String username, String password) async {
     try {
       final response = await _dio.post(
-        '/auth/login', // Đường dẫn này sẽ nối tiếp vào baseUrl (ví dụ: /api/auth/login)
+        '/auth/login', // Đường dẫn này sẽ nối tiếp vào baseUrl
         data: {'username': username, 'password': password},
       );
 
-      // Dio tự động parse JSON nên bạn có thể dùng response.data luôn
       return {
         'success': true,
         'message': response.data['message'],
@@ -136,6 +135,27 @@ class ApiService {
       return {
         'success': false,
         'message': 'Không thể kết nối đến máy chủ. Kiểm tra Node.js!',
+      };
+    }
+  }
+
+  // ============== REGISTER ==============
+
+  Future<Map<String, dynamic>> register(
+    String username,
+    String password,
+    String email,
+  ) async {
+    try {
+      final response = await _dio.post(
+        '/auth/register',
+        data: {'username': username, 'password': password, 'email': email},
+      );
+      return {'success': true, 'message': response.data['message']};
+    } on DioException catch (e) {
+      return {
+        'success': false,
+        'message': e.response?.data['message'] ?? 'Lỗi đăng ký',
       };
     }
   }
