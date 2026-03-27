@@ -70,4 +70,29 @@ class AddTransactionController extends GetxController {
       Get.snackbar('Thất bại', 'Không thể lưu giao dịch. Vui lòng thử lại.');
     }
   }
+
+  Future<void> addCategory(String name, String type) async {
+    if (name.isEmpty) {
+      Get.snackbar('Lỗi', 'Vui lòng nhập tên danh mục');
+      return;
+    }
+    isLoading(true);
+    bool success = await _apiService.createCategory(name: name, type: type);
+    if (success) {
+      await _loadCategories();
+      // Select the newly added category
+      try {
+        selectedCategory.value = categories.firstWhere((c) => c.name == name && c.type == type);
+      } catch (e) {
+        if (categories.isNotEmpty) selectedCategory.value = categories.last;
+      }
+      if (Get.isRegistered<HomeController>()) {
+        Get.find<HomeController>().fetchData();
+      }
+      Get.snackbar('Thành công', 'Đã thêm danh mục mới');
+    } else {
+      Get.snackbar('Thất bại', 'Không tạo được danh mục');
+    }
+    isLoading(false);
+  }
 }

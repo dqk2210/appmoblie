@@ -54,7 +54,15 @@ class AddTransactionScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: () => _showAddCategoryDialog(context, controller),
+                  icon: const Icon(Icons.add_circle_outline),
+                  label: const Text('Thêm danh mục mới'),
+                ),
+              ),
+              const SizedBox(height: 8),
 
               // Title
               const Text('Tiêu đề', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -143,6 +151,60 @@ class AddTransactionScreen extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+
+  void _showAddCategoryDialog(BuildContext context, AddTransactionController controller) {
+    final TextEditingController nameController = TextEditingController();
+    String selectedType = 'EXPENSE';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Thêm Danh mục Mới'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(labelText: 'Tên danh mục'),
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    value: selectedType,
+                    decoration: const InputDecoration(labelText: 'Loại (Thu/Chi)'),
+                    items: const [
+                      DropdownMenuItem(value: 'EXPENSE', child: Text('Chi tiêu (EXPENSE)')),
+                      DropdownMenuItem(value: 'INCOME', child: Text('Thu nhập (INCOME)')),
+                    ],
+                    onChanged: (val) {
+                      setState(() {
+                        if (val != null) selectedType = val;
+                      });
+                    },
+                  )
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: const Text('Hủy'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.back();
+                    controller.addCategory(nameController.text, selectedType);
+                  },
+                  child: const Text('Thêm'),
+                ),
+              ],
+            );
+          }
+        );
+      },
     );
   }
 }

@@ -49,6 +49,27 @@ class ApiService {
     }
   }
 
+  Future<bool> createCategory({required String name, required String type}) async {
+    try {
+      final response = await _dio.post(ApiEndpoints.categories, data: {
+        'name': name,
+        'type': type,
+      });
+      return response.data['success'] == true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> deleteCategory(int id) async {
+    try {
+      final response = await _dio.delete('${ApiEndpoints.categories}/$id');
+      return response.data['success'] == true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   // ============== TRANSACTIONS ==============
 
   Future<List<TransactionModel>> getTransactions({int? month, int? year}) async {
@@ -94,7 +115,7 @@ class ApiService {
 
   Future<bool> deleteTransaction(int id) async {
     try {
-      final response = await _dio.delete('\${ApiEndpoints.transactions}/\$id');
+      final response = await _dio.delete('${ApiEndpoints.transactions}/$id');
       return response.data['success'] == true;
     } catch (e) {
       return false;

@@ -51,4 +51,14 @@ class HomeController extends GetxController {
     totalExpense.value = expense;
     totalBalance.value = income - expense;
   }
+
+  Future<void> deleteTransaction(int id) async {
+    bool success = await _apiService.deleteTransaction(id);
+    if (success) {
+      Get.snackbar('Thành công', 'Đã xóa giao dịch');
+      await fetchData();
+    } else {
+      Get.snackbar('Thất bại', 'Không thể xóa giao dịch');
+    }
+  }
 }

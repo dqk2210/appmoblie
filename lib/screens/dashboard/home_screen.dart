@@ -37,7 +37,9 @@ class HomeScreen extends StatelessWidget {
 
         return RefreshIndicator(
           onRefresh: controller.fetchData, // Vuốt xuống để load lại trang
-          child: Column(
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.only(bottom: 80), // Padding cho nút FAB
             children: [
               _buildDashboardCard(controller),
               const Padding(
@@ -50,7 +52,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(child: _buildTransactionList(controller)),
+              _buildTransactionList(controller),
             ],
           ),
         );
@@ -143,34 +145,74 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildTransactionList(HomeController controller) {
     if (controller.transactions.isEmpty) {
-      return const Center(child: Text('Chưa có giao dịch nào!'));
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.0),
+          child: Text('Chưa có giao dịch nào!', style: TextStyle(color: Colors.grey)),
+        ),
+      );
     }
 
     return ListView.builder(
+      shrinkWrap: true, // Quan trọng vì nằm trong ListView cha
+      physics: const NeverScrollableScrollPhysics(), // Để List cha cuộn
       itemCount: controller.transactions.length,
       itemBuilder: (context, index) {
         final t = controller.transactions[index];
         final isIncome = t.categoryType == 'INCOME';
 
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: isIncome ? AppColors.income.withValues(alpha: 0.2) : AppColors.expense.withValues(alpha: 0.2),
-              child: Icon(
-                isIncome ? Icons.account_balance_wallet : Icons.shopping_cart,
-                color: isIncome ? AppColors.income : AppColors.expense,
-              ),
+        return Dismissible(
+          key: ValueKey(t.id),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.redAccent,
+              borderRadius: BorderRadius.circular(12),
             ),
-            title: Text(t.title ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text('${t.categoryName} • ${CurrencyFormat.formatDate(t.transactionDate ?? '')}'),
-            trailing: Text(
-              (isIncome ? '+' : '-') + CurrencyFormat.formatVND(t.amount ?? 0),
-              style: TextStyle(
-                color: isIncome ? AppColors.income : AppColors.expense,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20.0),
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+          confirmDismiss: (direction) async {
+            return await Get.defaultDialog<bool>(
+              title: 'Xác nhận xóa',
+              middleText: 'Bạn có chắc chắn muốn xóa giao dịch này không?',
+              textConfirm: 'Xóa',
+              textCancel: 'Hủy',
+              confirmTextColor: Colors.white,
+              buttonColor: Colors.redAccent,
+              onConfirm: () {
+                Get.back(result: true);
+              },
+              onCancel: () {
+                Get.back(result: false);
+              },
+            );
+          },
+          onDismissed: (direction) {
+            controller.deleteTransaction(t.id!);
+          },
+          child: Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: isIncome ? AppColors.income.withValues(alpha: 0.2) : AppColors.expense.withValues(alpha: 0.2),
+                child: Icon(
+                  isIncome ? Icons.account_balance_wallet : Icons.shopping_cart,
+                  color: isIncome ? AppColors.income : AppColors.expense,
+                ),
+              ),
+              title: Text(t.title ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text('${t.categoryName} • ${CurrencyFormat.formatDate(t.transactionDate ?? '')}'),
+              trailing: Text(
+                (isIncome ? '+' : '-') + CurrencyFormat.formatVND(t.amount ?? 0),
+                style: TextStyle(
+                  color: isIncome ? AppColors.income : AppColors.expense,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
